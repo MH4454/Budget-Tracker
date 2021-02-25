@@ -1,0 +1,20 @@
+{
+    "icon": [{
+        "src": "./icons/icon-512x512.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      },
+      {
+        "src": "./icons/icon-192x192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      }],
+    "name": "offline and online budget tracker",
+    "short_name": "Budget Tracker",
+    "theme_color": "#317efb",
+    "background_color": "#ffffff",
+    "description": "An App used to track and graph user transactions",
+    "display": "standalone",
+    "scope": "/",
+    "start_url": "/"
+  }
