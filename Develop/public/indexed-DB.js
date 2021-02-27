@@ -1,7 +1,7 @@
 const DB_NAME = 'BudgetAppDB';
 const DB_VERSION = 1;
 const DB_STORE_NAME = 'BudgetAppStatement';
-console.log("hello");
+
 var db;
 // Create Database with version #
 var request = indexedDB.open(DB_NAME, DB_VERSION);
@@ -17,7 +17,6 @@ request.onupgradeneeded = function(event) {
 
 request.onsuccess = function(event) {
   db = event.target.result;
-  openTransaction()
   if (navigator.onLine){
     postRecords()
   } else {
@@ -35,7 +34,10 @@ function openTransaction() {
 }
 
 function postRecords() {
+  openTransaction()
+  // Makes a clone of records in DB
   const records = dataStore.getAll();
+  // Post to api the records
   records.onsuccess = () => {
     if (records.result.length > 0) {
       fetch("/api/transaction/bulk", {
@@ -47,6 +49,12 @@ function postRecords() {
       })
       .then((response) => response.json())
       .then(() => {
-       openTransaction().clear()
+       openTransaction().clear()  // Opens a transaction and clears the store
       });
   }}}
+
+  function saveRecords(record) {
+    openTransaction().add(record);
+  }
+
+  window.addEventListener("online", postRecords);
