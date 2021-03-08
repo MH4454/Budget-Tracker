@@ -3,6 +3,7 @@ console.log("hello from service worker!")
 const FILES_TO_CACHE = [
     "/",
     "/index.html",
+    "/indexed-DB.js",
     "/manifest.webmanifest",
     "/styles.css",
     "/index.js",

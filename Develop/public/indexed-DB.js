@@ -2,7 +2,7 @@ const DB_NAME = 'BudgetAppDB';
 const DB_VERSION = 1;
 const DB_STORE_NAME = 'BudgetAppStatement';
 
-var db;
+let db;
 // Create Database with version #
 var request = indexedDB.open(DB_NAME, DB_VERSION);
 request.onerror = function(event) {
@@ -19,14 +19,12 @@ request.onsuccess = function(event) {
   db = event.target.result;
   if (navigator.onLine){
     postRecords()
-  } else {
-    saveRecords()
   }
 };
 
 function openTransaction() {
   // Tells IndexedDB to allow read/write access to the DB
-  const transaction = db.transaction([DB_NAME],"readwrite");
+  const transaction = db.transaction([DB_STORE_NAME],"readwrite");
   // Tells IndexedDB to access the object store to start transaction
   const dataStore = transaction.objectStore(DB_STORE_NAME)
 
@@ -34,7 +32,7 @@ function openTransaction() {
 }
 
 function postRecords() {
-  openTransaction()
+  var dataStore = openTransaction();
   // Makes a clone of records in DB
   const records = dataStore.getAll();
   // Post to api the records
@@ -45,7 +43,7 @@ function postRecords() {
         headers: {
           'Content-Type': 'application/json;charset=utf-8'
         },
-        body: JSON.stringify(getAll.result)
+        body: JSON.stringify(records.result)
       })
       .then((response) => response.json())
       .then(() => {
@@ -53,8 +51,11 @@ function postRecords() {
       });
   }}}
 
-  function saveRecords(record) {
-    openTransaction().add(record);
+  function saveRecord(record) {
+    var dataStore = openTransaction();
+    
+    dataStore.add(record);
+    //return dataStore
   }
 
   window.addEventListener("online", postRecords);
